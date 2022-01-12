@@ -1,0 +1,60 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Grpc.Net.Client;assembly=Grpc.Net.Client"
+             x:Class="GrpcDemo.MainPage"
+             BackgroundColor="{DynamicResource SecondaryColor}">
+
+    <ScrollView>
+        <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
+              Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
+
+            <Label 
+                Text="gRPC Demo"
+                Grid.Row="0"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label 
+                Text=""
+                Grid.Row="1"
+                FontSize="18"
+                FontAttributes="Bold"
+                x:Name="CounterLabel"
+                HorizontalOptions="Center" />
+
+            <Button 
+                Text="Retrieve Random Record"
+                FontAttributes="Bold"
+                Grid.Row="2"
+                SemanticProperties.Hint="Use gRPC to fetch a random Person record"
+                Clicked="OnCounterClicked"
+                HorizontalOptions="Center" />
+
+            <Button 
+                Text="Retrieve 5000 record stream"
+                FontAttributes="Bold"
+                Grid.Row="3"
+                SemanticProperties.Hint="Use gRPC to stream 5000 records"
+                Clicked="GRPCStreamButtonClicked"
+                HorizontalOptions="Center" />
+
+            <CollectionView HeightRequest="350"
+                            WidthRequest="300"
+                            Grid.Row="4" 
+                            HorizontalOptions="Center"
+                            ItemsSource="{Binding People}" 
+                            BackgroundColor="Beige">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Margin="10,0,0,0" Text="{Binding FirstName}" />
+                            <Label Margin="10,0,0,0" Text="{Binding LastName}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
