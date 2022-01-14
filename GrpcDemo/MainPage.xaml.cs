@@ -5,18 +5,11 @@ namespace GrpcDemo;
 
 public partial class MainPage : ContentPage, INotifyPropertyChanged
 {
-	People.PeopleClient _peopleClient;
+    People.PeopleClient _peopleClient;
     Person ReceivedPerson;
 
-    private ObservableCollection<Person> people { get; set; } = new ObservableCollection<Person>();
-    public ObservableCollection<Person> People { 
-        get { return people; }
-        set {
-            people = value;
-            OnPropertyChanged("People");
-        }
-    }
-
+    public List<Person> People { get; } = new ();
+    
     public MainPage(People.PeopleClient peopleClient)
 	{
 		_peopleClient = peopleClient;
@@ -40,33 +33,37 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         // the client-side for gRPC streams is a bit different.
         // First we return an AsyncServerStreamingCall<Person>
         using var call = _peopleClient.GetAllStream(
-            new GetAllPeopleStreamRequest() { Person = ReceivedPerson}
+            new GetAllPeopleStreamRequest { Person = ReceivedPerson}
         );
+
+        var buffer = new List<Person>();
+
+        Task flushBuffer()
+            => MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                People.AddRange(buffer);
+                buffer.Clear();
+                OnPropertyChanged(nameof(People));
+
+                elapsed20 = DateTime.Now.Subtract(startTime).TotalMilliseconds;
+                // yes! refresh the UI.
+                CounterLabel.Text = $"Loading ({elapsed20} ms)...{People.Count}";
+                SemanticScreenReader.Announce(CounterLabel.Text);
+                await Task.Delay(1);
+            });
 
         // Now we can iterate through the response stream
         while (await call.ResponseStream.MoveNext(token))
         {
             // add this person to our list (this blows up in iOS)
-            People.Add(call.ResponseStream.Current);
+            buffer.Add(call.ResponseStream.Current);
 
-            // have we reached 20 yet?
-            if (People.Count == 20)
-            {
-                // yes! That's enough to fill up the <select>
-                elapsed20 = DateTime.Now.Subtract(startTime).TotalMilliseconds;
-                CounterLabel.Text = $"Loading ({elapsed20} ms)...{People.Count}";
-                // refresh the page
-                SemanticScreenReader.Announce(CounterLabel.Text);
-                await Task.Delay(1);
-            }
+            var peopleCount = People.Count + buffer.Count;
 
             // Is the count evenly divisible by 100?
-            else if (People.Count % 100 == 0)
+            if (peopleCount == 20 || peopleCount % 100 == 0)
             {
-                // yes! refresh the UI.
-                CounterLabel.Text = $"Loading ({elapsed20} ms)...{People.Count}";
-                SemanticScreenReader.Announce(CounterLabel.Text);
-                await Task.Delay(1);
+                await flushBuffer();
             }
         }
 
