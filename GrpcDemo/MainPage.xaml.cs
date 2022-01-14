@@ -46,7 +46,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         // Now we can iterate through the response stream
         while (await call.ResponseStream.MoveNext(token))
         {
-            // add this person to our list
+            // add this person to our list (this blows up in iOS)
             People.Add(call.ResponseStream.Current);
 
             // have we reached 20 yet?
