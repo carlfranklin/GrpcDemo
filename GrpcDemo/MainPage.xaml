@@ -1,21 +1,22 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Grpc.Net.Client;assembly=Grpc.Net.Client"
+             xmlns:demo="clr-namespace:GrpcDemo;assembly=GrpcDemo"
+             xmlns:shared="clr-namespace:GrpcShared;assembly=GrpcShared"
              x:Class="GrpcDemo.MainPage"
+             x:DataType="demo:MainPage"
              BackgroundColor="{DynamicResource SecondaryColor}">
 
-    <ScrollView>
-        <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*"
-              Padding="{OnPlatform iOS='30,60,30,30', Default='30'}">
+    <Grid RowSpacing="25" RowDefinitions="Auto,Auto,Auto,Auto,*">
 
-            <Label 
+        <Label 
                 Text="gRPC Demo"
                 Grid.Row="0"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
 
-            <Label 
+        <Label 
                 Text=""
                 Grid.Row="1"
                 FontSize="18"
@@ -23,7 +24,7 @@
                 x:Name="CounterLabel"
                 HorizontalOptions="Center" />
 
-            <Button 
+        <Button 
                 Text="Retrieve Random Record"
                 FontAttributes="Bold"
                 Grid.Row="2"
@@ -31,7 +32,7 @@
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
-            <Button 
+        <Button 
                 Text="Retrieve 5000 record stream"
                 FontAttributes="Bold"
                 Grid.Row="3"
@@ -39,22 +40,21 @@
                 Clicked="GRPCStreamButtonClicked"
                 HorizontalOptions="Center" />
 
-            <CollectionView HeightRequest="350"
-                            WidthRequest="300"
-                            Grid.Row="4" 
-                            HorizontalOptions="Center"
-                            ItemsSource="{Binding People}" 
-                            BackgroundColor="Beige">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Orientation="Horizontal">
-                            <Label Margin="10,0,0,0" Text="{Binding FirstName}" />
-                            <Label Margin="10,0,0,0" Text="{Binding LastName}" />
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+        <CollectionView HorizontalOptions="FillAndExpand"
+                        Grid.Row="4" 
+                        ItemSizingStrategy="MeasureFirstItem"
+                        VerticalOptions="FillAndExpand"
+                        ItemsSource="{Binding People}" 
+                        BackgroundColor="Beige">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="shared:Person">
+                    <GridLayout ColumnDefinitions="Auto,Auto">
+                        <Label TextColor="Blue" Margin="10,0,0,0" GridLayout.Column="0" Text="{Binding FirstName}" />
+                        <Label Margin="10,0,0,0" GridLayout.Column="1" Text="{Binding LastName}" />
+                    </GridLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
-        </Grid>
-    </ScrollView>
+    </Grid>
 </ContentPage>
