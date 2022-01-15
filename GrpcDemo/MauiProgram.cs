@@ -7,7 +7,7 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
-        string BaseAddress = "{ENTER YOUR SERVER ADDRESS HERE}";
+        string BaseAddress = "{PUBLIC SERVER URL GOES HERE}";
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

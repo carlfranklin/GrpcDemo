@@ -49,12 +49,17 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="shared:Person">
                     <GridLayout ColumnDefinitions="Auto,Auto">
-                        <Label TextColor="Blue" Margin="10,0,0,0" GridLayout.Column="0" Text="{Binding FirstName}" />
-                        <Label Margin="10,0,0,0" GridLayout.Column="1" Text="{Binding LastName}" />
+                        <Label TextColor="Blue" 
+                               FontSize="20"
+                               Margin="10,0,0,0" GridLayout.Column="0" 
+                               Text="{Binding FirstName}" />
+                        <Label Margin="10,0,0,0" GridLayout.Column="1" 
+                               FontSize="20"
+                               Text="{Binding LastName}" />
                     </GridLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
+    
 </ContentPage>
